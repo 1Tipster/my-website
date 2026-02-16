@@ -8,7 +8,7 @@ import vercel from '@astrojs/vercel';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://my-Idy-website.vercel.app',
+  site: 'https://my-website-pi-hazel.vercel.app',
   output: 'server',
   adapter: vercel(),
   vite: {
