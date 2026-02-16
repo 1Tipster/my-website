@@ -1,8 +1,9 @@
 backend:
   name: github
-  repo: your-username/my-website # TODO: Replace with your GitHub repo
+  repo: 1Tipster/my-website
   branch: main
-  base_url: https://your-oauth-provider.vercel.app # TODO: Replace with your OAuth proxy URL
+  base_url: https://my-Idy-website.vercel.app
+  auth_endpoint: /api/auth
 
 media_folder: public/images/uploads
 public_folder: /images/uploads
