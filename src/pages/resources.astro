@@ -1,0 +1,76 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const links = [
+  {
+    category: 'Tools',
+    items: [
+      { title: 'Astro', url: 'https://astro.build', description: 'The web framework used to build this site.' },
+      { title: 'Tailwind CSS', url: 'https://tailwindcss.com', description: 'A utility-first CSS framework for rapid UI development.' },
+      { title: 'VS Code', url: 'https://code.visualstudio.com', description: 'A lightweight, extensible code editor.' },
+    ],
+  },
+  {
+    category: 'Books',
+    items: [
+      { title: 'Eloquent JavaScript', url: 'https://eloquentjavascript.net', description: 'A modern introduction to programming with JavaScript.' },
+      { title: 'Designing Data-Intensive Applications', url: 'https://dataintensive.net', description: 'A deep dive into the principles behind reliable, scalable systems.' },
+    ],
+  },
+];
+
+const downloads = [
+  { title: 'Sample Resume Template', file: '/downloads/resume-template.pdf', description: 'A clean, minimal resume template in PDF format.' },
+  { title: 'Project Starter Checklist', file: '/downloads/project-checklist.pdf', description: 'A checklist to kick off new projects.' },
+];
+---
+
+<BaseLayout title="Resources | My Website" description="Curated links, books, and downloadable files.">
+  <div class="max-w-3xl mx-auto">
+    <h1 class="text-4xl font-bold mb-2">Resources</h1>
+    <p class="text-[var(--color-text-secondary)] mb-10">
+      A collection of tools, books, and files I find useful.
+    </p>
+
+    {links.map((section) => (
+      <section class="mb-10">
+        <h2 class="text-2xl font-semibold mb-4">{section.category}</h2>
+        <ul class="space-y-4">
+          {section.items.map((item) => (
+            <li>
+              <a
+                href={item.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="block p-4 rounded-xl border border-[var(--color-border)] hover:border-[var(--color-accent)] transition-colors"
+              >
+                <span class="font-medium text-[var(--color-accent)]">{item.title}</span>
+                <span class="ml-1 text-xs text-[var(--color-text-secondary)]">&#8599;</span>
+                <p class="mt-1 text-sm text-[var(--color-text-secondary)]">{item.description}</p>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))}
+
+    <section class="mb-10">
+      <h2 class="text-2xl font-semibold mb-4">Downloads</h2>
+      <ul class="space-y-4">
+        {downloads.map((item) => (
+          <li>
+            <a
+              href={item.file}
+              download
+              class="block p-4 rounded-xl border border-[var(--color-border)] hover:border-[var(--color-accent)] transition-colors"
+            >
+              <span class="font-medium text-[var(--color-accent)]">{item.title}</span>
+              <span class="ml-1 text-xs text-[var(--color-text-secondary)]">&#8595;</span>
+              <p class="mt-1 text-sm text-[var(--color-text-secondary)]">{item.description}</p>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  </div>
+</BaseLayout>

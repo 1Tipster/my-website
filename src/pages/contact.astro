@@ -1,0 +1,70 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Contact | My Website" description="Get in touch with me.">
+  <div class="max-w-xl mx-auto">
+    <h1 class="text-4xl font-bold mb-6">Contact</h1>
+    <p class="text-[var(--color-text-secondary)] mb-8">
+      Have a question or want to get in touch? Fill out the form below and it will open your email client with your message ready to send.
+    </p>
+
+    <form id="contact-form" class="space-y-6">
+      <div>
+        <label for="name" class="block text-sm font-medium mb-2">Name</label>
+        <input
+          type="text"
+          id="name"
+          name="name"
+          required
+          class="w-full px-4 py-2 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-secondary)] text-[var(--color-text)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] transition-colors"
+        />
+      </div>
+
+      <div>
+        <label for="email" class="block text-sm font-medium mb-2">Email</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          required
+          class="w-full px-4 py-2 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-secondary)] text-[var(--color-text)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] transition-colors"
+        />
+      </div>
+
+      <div>
+        <label for="message" class="block text-sm font-medium mb-2">Message</label>
+        <textarea
+          id="message"
+          name="message"
+          rows="5"
+          required
+          class="w-full px-4 py-2 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-secondary)] text-[var(--color-text)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] transition-colors resize-y"
+        ></textarea>
+      </div>
+
+      <button
+        type="submit"
+        class="px-6 py-2 rounded-lg bg-[var(--color-accent)] text-white font-medium hover:bg-[var(--color-accent-hover)] transition-colors"
+      >
+        Send Message
+      </button>
+    </form>
+
+    <p class="mt-8 text-sm text-[var(--color-text-secondary)]">
+      You can also email me directly at <a href="mailto:hello@example.com" class="text-[var(--color-accent)] hover:underline">hello@example.com</a>.
+    </p>
+  </div>
+
+  <script is:inline>
+    document.getElementById('contact-form').addEventListener('submit', function (e) {
+      e.preventDefault();
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+      const message = document.getElementById('message').value;
+      const subject = encodeURIComponent('Contact from ' + name);
+      const body = encodeURIComponent('From: ' + name + ' (' + email + ')\n\n' + message);
+      window.location.href = 'mailto:hello@example.com?subject=' + subject + '&body=' + body;
+    });
+  </script>
+</BaseLayout>

@@ -1,0 +1,79 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import EventCard from '../../components/EventCard.astro';
+import { getCollection } from 'astro:content';
+
+const allEvents = await getCollection('events');
+const sortedEvents = allEvents.sort(
+  (a, b) => a.data.date.valueOf() - b.data.date.valueOf()
+);
+
+const now = new Date();
+const upcomingEvents = sortedEvents.filter((e) => e.data.date >= now);
+const pastEvents = sortedEvents.filter((e) => e.data.date < now).reverse();
+
+// Group upcoming events by month
+const groupedUpcoming = upcomingEvents.reduce<Record<string, typeof upcomingEvents>>((acc, event) => {
+  const key = event.data.date.toLocaleDateString('en-us', { year: 'numeric', month: 'long' });
+  if (!acc[key]) acc[key] = [];
+  acc[key].push(event);
+  return acc;
+}, {});
+---
+
+<BaseLayout title="Events | My Website" description="Upcoming and past events.">
+  <h1 class="text-4xl font-bold mb-8">Events</h1>
+
+  {upcomingEvents.length === 0 && pastEvents.length === 0 ? (
+    <p class="text-[var(--color-text-secondary)]">No events yet. Check back soon!</p>
+  ) : (
+    <>
+      {upcomingEvents.length > 0 && (
+        <section>
+          <h2 class="text-xl font-semibold mb-4 text-[var(--color-accent)]">Upcoming</h2>
+          {Object.entries(groupedUpcoming).map(([month, events]) => (
+            <div class="mb-8">
+              <h3 class="text-sm font-medium text-[var(--color-text-secondary)] uppercase tracking-wide mb-3">
+                {month}
+              </h3>
+              <div class="grid gap-4">
+                {events.map((event) => (
+                  <EventCard
+                    title={event.data.title}
+                    description={event.data.description}
+                    date={event.data.date}
+                    endDate={event.data.endDate}
+                    location={event.data.location}
+                    url={event.data.url}
+                    slug={event.id}
+                    photoCount={event.data.photos.length}
+                  />
+                ))}
+              </div>
+            </div>
+          ))}
+        </section>
+      )}
+
+      {pastEvents.length > 0 && (
+        <section class="mt-12">
+          <h2 class="text-xl font-semibold mb-4">Past Events Archive</h2>
+          <div class="grid gap-4">
+            {pastEvents.map((event) => (
+              <EventCard
+                title={event.data.title}
+                description={event.data.description}
+                date={event.data.date}
+                endDate={event.data.endDate}
+                location={event.data.location}
+                url={event.data.url}
+                slug={event.id}
+                photoCount={event.data.photos.length}
+              />
+            ))}
+          </div>
+        </section>
+      )}
+    </>
+  )}
+</BaseLayout>

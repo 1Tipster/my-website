@@ -1,0 +1,95 @@
+---
+import BaseLayout from './BaseLayout.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  date: Date;
+  endDate?: Date;
+  location?: string;
+  url?: string;
+  photos?: string[];
+}
+
+const { title, description, date, endDate, location, url, photos = [] } = Astro.props;
+
+function formatDate(d: Date): string {
+  return d.toLocaleDateString('en-us', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+}
+
+function formatTime(d: Date): string {
+  return d.toLocaleTimeString('en-us', {
+    hour: 'numeric',
+    minute: '2-digit',
+  });
+}
+
+const isPast = date < new Date();
+---
+
+<BaseLayout title={`${title} | Events`} description={description}>
+  <article class="max-w-3xl mx-auto">
+    <div class="mb-8">
+      <a href="/events" class="text-sm text-[var(--color-accent)] hover:underline">&larr; All events</a>
+    </div>
+
+    <h1 class="text-4xl font-bold mb-3">{title}</h1>
+
+    <div class="flex flex-wrap items-center gap-3 text-sm text-[var(--color-text-secondary)] mb-6">
+      {isPast && (
+        <span class="text-xs px-2 py-1 rounded-full bg-[var(--color-text-secondary)]/10">Past event</span>
+      )}
+      <time datetime={date.toISOString()}>
+        {formatDate(date)} at {formatTime(date)}
+      </time>
+      {endDate && (
+        <span>— {formatDate(endDate)} at {formatTime(endDate)}</span>
+      )}
+    </div>
+
+    {location && (
+      <div class="flex items-center gap-1.5 text-sm text-[var(--color-text-secondary)] mb-4">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+        </svg>
+        {location}
+      </div>
+    )}
+
+    {url && (
+      <div class="mb-6">
+        <a
+          href={url}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-1 text-sm text-[var(--color-accent)] hover:underline"
+        >
+          Event link &nearr;
+        </a>
+      </div>
+    )}
+
+    <div class="prose">
+      <slot />
+    </div>
+
+    {photos.length > 0 && (
+      <section class="mt-12">
+        <h2 class="text-2xl font-semibold mb-4">Photos</h2>
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+          {photos.map((photo) => (
+            <a href={photo} target="_blank" rel="noopener noreferrer" class="block overflow-hidden rounded-lg border border-[var(--color-border)] hover:border-[var(--color-accent)] transition-colors">
+              <img src={photo} alt="" class="w-full h-48 object-cover" />
+            </a>
+          ))}
+        </div>
+      </section>
+    )}
+  </article>
+</BaseLayout>
