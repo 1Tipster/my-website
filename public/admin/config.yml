@@ -1,3 +1,4 @@
+# Decap CMS configuration
 backend:
   name: github
   repo: 1Tipster/my-website
