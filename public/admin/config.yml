@@ -3,7 +3,7 @@ backend:
   name: github
   repo: 1Tipster/my-website
   branch: main
-  base_url: https://my-website-pi-hazel.vercel.app
+  base_url: https://my-website-q4jg8nych-barry-tavlins-projects.vercel.app
   auth_endpoint: /api/auth
 
 media_folder: public/images/uploads
