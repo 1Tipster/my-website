@@ -3,8 +3,6 @@ backend:
   name: github
   repo: 1Tipster/my-website
   branch: main
-  base_url: https://idyllwild-indivisible.vercel.app
-  auth_endpoint: /api/auth
 
 media_folder: public/images/uploads
 public_folder: /images/uploads
