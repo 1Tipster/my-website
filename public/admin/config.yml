@@ -1,6 +1,7 @@
 # Decap CMS configuration - deployed 2026-02-16T14:15:00Z
 backend:
-  name: git-gateway
+  name: github
+  repo: 1Tipster/my-website
   branch: main
 
 media_folder: public/images/uploads
