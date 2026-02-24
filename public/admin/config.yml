@@ -1,10 +1,9 @@
 # Decap CMS configuration - deployed 2026-02-16T14:15:00Z
+# Updated for Git Gateway
 backend:
   name: github
   repo: 1Tipster/my-website
   branch: main
-  base_url: https://celadon-faun-a1da47.netlify.app
-  auth_endpoint: /.netlify/functions/auth-start
 
 media_folder: public/images/uploads
 public_folder: /images/uploads
