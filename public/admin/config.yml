@@ -4,7 +4,7 @@ backend:
   name: github
   repo: 1Tipster/my-website
   branch: main
-  base_url: https://decapcms-oauth.vercel.app
+  base_url: https://api.netlify.com
   auth_endpoint: /api/auth
 
 media_folder: public/images/uploads
