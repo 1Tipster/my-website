@@ -1,8 +1,11 @@
 # Decap CMS configuration - deployed 2026-02-16T14:15:00Z
 # Updated for Git Gateway
 backend:
-  name: git-gateway
+  name: github
+  repo: 1Tipster/my-website
   branch: main
+  base_url: https://decapcms-oauth.vercel.app
+  auth_endpoint: /api/auth
 
 media_folder: public/images/uploads
 public_folder: /images/uploads
