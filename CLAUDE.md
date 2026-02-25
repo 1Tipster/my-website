@@ -4,8 +4,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Commands
 
-- `npm run dev` — Start dev server at localhost:4321
-- `npm run build` — Build static site to `./dist/`
+- `npm run dev` — Start Tina local server + Astro dev server at localhost:4321
+- `npm run build` — Run `tinacms build` (generates admin SPA) then `astro build` to `./dist/`
 - `npm run preview` — Preview production build locally
 - `npm run astro` — Run Astro CLI (e.g., `npm run astro -- add react`)
 
@@ -13,7 +13,7 @@ No test framework is configured. No linter is configured.
 
 ## Architecture
 
-This is a personal website built with **Astro 5** (static output), **Tailwind CSS v4**, and **Decap CMS**, deployed on **Vercel**.
+This is a personal website built with **Astro 5** (static output), **Tailwind CSS v4**, and **Tina CMS**, deployed on **Vercel**.
 
 ### Content Collections
 
@@ -41,6 +41,6 @@ Blog posts generate pages via `src/pages/blog/[...slug].astro` using `getStaticP
 - All colors use CSS custom properties (`var(--color-bg)`, `var(--color-accent)`, etc.) — use these instead of hardcoded Tailwind color utilities
 - Theme toggle is client-side vanilla JS via `<script is:inline>` in `ThemeToggle.astro`
 - RSS feed generated at `/rss.xml` via `src/pages/rss.xml.ts`
-- Decap CMS admin panel at `/admin/` (config in `public/admin/config.yml`, needs GitHub OAuth setup)
+- Tina CMS admin panel at `/admin/` (config in `tina/config.ts`; requires `TINA_PUBLIC_CLIENT_ID` and `TINA_TOKEN` from app.tina.io)
 - Navigation links are defined in `Header.astro` as a `navLinks` array
 - Astro integrations: `@astrojs/mdx`, `@astrojs/sitemap`, `@astrojs/vercel`
