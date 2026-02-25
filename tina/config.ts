@@ -1,3 +1,4 @@
+// Tina CMS configuration
 import { defineConfig } from 'tinacms';
 
 export default defineConfig({
