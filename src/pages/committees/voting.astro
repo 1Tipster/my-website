@@ -1,0 +1,24 @@
+---
+export const prerender = true;
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Voting | Idyllwild Indivisible" description="Our Voting committee works to protect and expand voting rights.">
+  <div class="max-w-3xl mx-auto">
+    <nav class="text-sm text-[var(--color-text-secondary)] mb-6">
+      <a href="/committees/voting" class="hover:text-[var(--color-accent)]">Committees</a>
+      <span class="mx-2">/</span>
+      <span>Voting</span>
+    </nav>
+    <h1 class="text-4xl font-bold mb-4">Voting Committee</h1>
+    <p class="text-xl text-[var(--color-text-secondary)] mb-8">
+      Protecting and expanding the right to vote for every eligible citizen.
+    </p>
+    <div class="p-6 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-secondary)]">
+      <p class="text-[var(--color-text-secondary)]">
+        This page is coming soon. Check back for information about our Voting committee's
+        activities, voter registration drives, and resources.
+      </p>
+    </div>
+  </div>
+</BaseLayout>

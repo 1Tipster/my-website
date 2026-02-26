@@ -17,16 +17,74 @@ const upcomingEvents = allEvents
   .slice(0, 3);
 ---
 
-<BaseLayout title="Home | My Website">
-  <section class="text-center py-12">
-    <h1 class="text-5xl font-bold mb-4">Welcome to My Website</h1>
-    <p class="text-xl text-[var(--color-text-secondary)] max-w-2xl mx-auto">
-      A personal blog and event hub. Read the latest posts, check out upcoming events, and learn more about what I do.
-    </p>
+<BaseLayout title="Home | Idyllwild Indivisible" description="Fighting for democracy, justice, and peace in our community.">
+  <!-- Hero with background image -->
+  <section class="relative text-center py-20 -mx-4 px-4 overflow-hidden rounded-xl mb-8">
+    <!-- Background image at high opacity -->
+    <div
+      class="absolute inset-0 bg-cover bg-center bg-no-repeat"
+      style="background-image: url('/images/Idyllwild-background.jpg'); opacity: 0.87;"
+      aria-hidden="true"
+    ></div>
+    <!-- Thin color wash to keep text readable -->
+    <div class="absolute inset-0 bg-[var(--color-bg)]" style="opacity: 0.45;" aria-hidden="true"></div>
+    <div class="relative">
+      <h1 class="text-4xl font-bold mb-2">Idyllwild Indivisible</h1>
+      <p class="text-2xl font-semibold mb-6 text-[var(--color-accent)]">Fighting for Democracy, Justice, and Peace</p>
+      <p class="text-lg text-[var(--color-text-secondary)] max-w-2xl mx-auto">
+        A local grassroots chapter working together to protect our democracy,
+        champion justice, and build a more peaceful community and world.
+      </p>
+    </div>
+  </section>
+
+  <!-- Get Involved section -->
+  <section class="mt-4">
+    <h2 class="text-2xl font-bold mb-8 text-center">Get Involved</h2>
+    <div class="grid gap-6 md:grid-cols-3">
+      <a
+        href="/get-involved/volunteer"
+        class="block p-6 rounded-xl border border-[var(--color-border)] hover:border-[var(--color-accent)] text-center transition-colors group"
+      >
+        <div class="w-12 h-12 mx-auto mb-4 rounded-full bg-[var(--color-bg-secondary)] flex items-center justify-center">
+          <svg class="w-6 h-6 text-[var(--color-accent)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold mb-2 group-hover:text-[var(--color-accent)] transition-colors">Volunteer</h3>
+        <p class="text-[var(--color-text-secondary)] text-sm">Join us in taking action for our community and values.</p>
+      </a>
+
+      <a
+        href="/get-involved/donate"
+        class="block p-6 rounded-xl border border-[var(--color-border)] hover:border-[var(--color-accent)] text-center transition-colors group"
+      >
+        <div class="w-12 h-12 mx-auto mb-4 rounded-full bg-[var(--color-bg-secondary)] flex items-center justify-center">
+          <svg class="w-6 h-6 text-[var(--color-accent)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold mb-2 group-hover:text-[var(--color-accent)] transition-colors">Donate</h3>
+        <p class="text-[var(--color-text-secondary)] text-sm">Support our work with a financial contribution.</p>
+      </a>
+
+      <a
+        href="/get-involved/join"
+        class="block p-6 rounded-xl border border-[var(--color-border)] hover:border-[var(--color-accent)] text-center transition-colors group"
+      >
+        <div class="w-12 h-12 mx-auto mb-4 rounded-full bg-[var(--color-bg-secondary)] flex items-center justify-center">
+          <svg class="w-6 h-6 text-[var(--color-accent)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold mb-2 group-hover:text-[var(--color-accent)] transition-colors">Join</h3>
+        <p class="text-[var(--color-text-secondary)] text-sm">Become a member of Idyllwild Indivisible.</p>
+      </a>
+    </div>
   </section>
 
   {recentPosts.length > 0 && (
-    <section class="mt-8">
+    <section class="mt-16">
       <div class="flex items-center justify-between mb-6">
         <h2 class="text-2xl font-bold">Recent Posts</h2>
         <a href="/blog" class="text-sm text-[var(--color-accent)] hover:underline">View all &rarr;</a>

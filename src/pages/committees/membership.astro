@@ -1,0 +1,24 @@
+---
+export const prerender = true;
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Membership | Idyllwild Indivisible" description="Our Membership committee welcomes and engages new members.">
+  <div class="max-w-3xl mx-auto">
+    <nav class="text-sm text-[var(--color-text-secondary)] mb-6">
+      <a href="/committees/membership" class="hover:text-[var(--color-accent)]">Committees</a>
+      <span class="mx-2">/</span>
+      <span>Membership</span>
+    </nav>
+    <h1 class="text-4xl font-bold mb-4">Membership Committee</h1>
+    <p class="text-xl text-[var(--color-text-secondary)] mb-8">
+      Welcoming, engaging, and growing our community of dedicated members.
+    </p>
+    <div class="p-6 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-secondary)]">
+      <p class="text-[var(--color-text-secondary)]">
+        This page is coming soon. Check back for information about joining, member benefits,
+        and how to get connected with our chapter.
+      </p>
+    </div>
+  </div>
+</BaseLayout>
