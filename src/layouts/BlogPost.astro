@@ -1,5 +1,6 @@
 ---
 import BaseLayout from './BaseLayout.astro';
+import GiscusComments from '../components/GiscusComments.astro';
 
 interface Props {
   title: string;
@@ -51,5 +52,6 @@ function formatDate(date: Date): string {
       )}
     </div>
     <slot />
+    <GiscusComments />
   </article>
 </BaseLayout>

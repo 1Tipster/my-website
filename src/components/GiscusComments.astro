@@ -1,0 +1,49 @@
+---
+---
+
+<section class="mt-12 pt-8 border-t border-[var(--color-border)]">
+  <h2 class="text-xl font-semibold mb-6">Comments</h2>
+  <div class="giscus"></div>
+</section>
+
+<script>
+  function getTheme(): string {
+    return document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+  }
+
+  function loadGiscus(): void {
+    const script = document.createElement('script');
+    script.src = 'https://giscus.app/client.js';
+    script.setAttribute('data-repo', '1Tipster/my-website');
+    script.setAttribute('data-repo-id', 'R_kgDORRzapQ');
+    script.setAttribute('data-category', 'Announcements');
+    script.setAttribute('data-category-id', 'DIC_kwDORRzapc4C3Woy');
+    script.setAttribute('data-mapping', 'pathname');
+    script.setAttribute('data-strict', '0');
+    script.setAttribute('data-reactions-enabled', '1');
+    script.setAttribute('data-emit-metadata', '0');
+    script.setAttribute('data-input-position', 'top');
+    script.setAttribute('data-theme', getTheme());
+    script.setAttribute('data-lang', 'en');
+    script.setAttribute('data-loading', 'lazy');
+    script.setAttribute('crossorigin', 'anonymous');
+    script.async = true;
+    document.querySelector('.giscus')?.appendChild(script);
+  }
+
+  loadGiscus();
+
+  // Keep Giscus in sync when the site's dark/light theme is toggled
+  const observer = new MutationObserver(() => {
+    const theme = getTheme();
+    const iframe = document.querySelector<HTMLIFrameElement>('iframe.giscus-frame');
+    if (iframe?.contentWindow) {
+      iframe.contentWindow.postMessage(
+        { giscus: { setConfig: { theme } } },
+        'https://giscus.app'
+      );
+    }
+  });
+
+  observer.observe(document.documentElement, { attributeFilter: ['class'] });
+</script>
