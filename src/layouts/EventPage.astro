@@ -1,6 +1,11 @@
 ---
 import BaseLayout from './BaseLayout.astro';
 
+interface Attachment {
+  url: string;
+  label: string;
+}
+
 interface Props {
   title: string;
   description: string;
@@ -9,9 +14,22 @@ interface Props {
   location?: string;
   url?: string;
   photos?: string[];
+  attachments?: Attachment[];
 }
 
-const { title, description, date, endDate, location, url, photos = [] } = Astro.props;
+const { title, description, date, endDate, location, url, photos = [], attachments = [] } = Astro.props;
+
+function getFileType(fileUrl: string): { ext: string; color: string } {
+  const ext = fileUrl.split('.').pop()?.toLowerCase() ?? '';
+  const colors: Record<string, string> = {
+    pdf:  '#dc2626',
+    doc:  '#2563eb', docx: '#2563eb',
+    xls:  '#16a34a', xlsx: '#16a34a',
+    ppt:  '#ea580c', pptx: '#ea580c',
+    jpg:  '#7c3aed', jpeg: '#7c3aed', png: '#7c3aed', gif: '#7c3aed', webp: '#7c3aed',
+  };
+  return { ext: ext.toUpperCase() || 'FILE', color: colors[ext] ?? '#6b7280' };
+}
 
 function formatDate(d: Date): string {
   return d.toLocaleDateString('en-us', {
@@ -78,6 +96,33 @@ const isPast = date < new Date();
     <div class="prose">
       <slot />
     </div>
+
+    {attachments.length > 0 && (
+      <section class="mt-10">
+        <h2 class="text-xl font-semibold mb-4">Attachments</h2>
+        <ul class="flex flex-col gap-2">
+          {attachments.map((file) => {
+            const { ext, color } = getFileType(file.url);
+            return (
+              <li>
+                <a
+                  href={file.url}
+                  download
+                  class="inline-flex items-center gap-3 px-4 py-3 rounded-lg border border-[var(--color-border)] hover:border-[var(--color-accent)] transition-colors group w-full sm:w-auto"
+                >
+                  <!-- Download icon -->
+                  <svg class="w-4 h-4 flex-shrink-0 text-[var(--color-text-secondary)] group-hover:text-[var(--color-accent)] transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                  </svg>
+                  <span class="text-sm font-medium group-hover:text-[var(--color-accent)] transition-colors">{file.label}</span>
+                  <span class="text-xs font-bold px-1.5 py-0.5 rounded text-white flex-shrink-0" style={`background-color: ${color};`}>{ext}</span>
+                </a>
+              </li>
+            );
+          })}
+        </ul>
+      </section>
+    )}
 
     {photos.length > 0 && (
       <section class="mt-12">

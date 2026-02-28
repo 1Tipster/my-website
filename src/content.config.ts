@@ -23,6 +23,10 @@ const events = defineCollection({
     location: z.string().optional(),
     url: z.string().url().optional(),
     photos: z.array(z.string()).default([]),
+    attachments: z.array(z.object({
+      url: z.string(),
+      label: z.string(),
+    })).default([]),
   }),
 });
 

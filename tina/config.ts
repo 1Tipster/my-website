@@ -113,6 +113,31 @@ export default defineConfig({
             list: true,
           },
           {
+            type: 'object',
+            name: 'attachments',
+            label: 'Attachments',
+            list: true,
+            ui: {
+              itemProps: (item) => ({
+                label: item?.label || 'Attachment',
+              }),
+            },
+            fields: [
+              {
+                type: 'image',
+                name: 'url',
+                label: 'File',
+                required: true,
+              },
+              {
+                type: 'string',
+                name: 'label',
+                label: 'Label',
+                required: true,
+              },
+            ],
+          },
+          {
             type: 'rich-text',
             name: 'body',
             label: 'Body',
