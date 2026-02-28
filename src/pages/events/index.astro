@@ -20,35 +20,83 @@ const groupedUpcoming = upcomingEvents.reduce<Record<string, typeof upcomingEven
   acc[key].push(event);
   return acc;
 }, {});
+
+function toDateStr(d: Date): string {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+
+const calendarEvents = sortedEvents.map(e => ({
+  date: toDateStr(e.data.date),
+  title: e.data.title,
+  slug: e.id,
+}));
 ---
 
 <BaseLayout title="Events | My Website" description="Upcoming and past events.">
   <h1 class="text-4xl font-bold mb-8">Events</h1>
+
+  {allEvents.length > 0 && (
+    <div class="mb-10">
+      <div class="rounded-xl border border-[var(--color-border)] overflow-hidden">
+        <!-- Calendar header -->
+        <div class="flex items-center justify-between px-4 py-3 bg-[var(--color-bg-secondary)]">
+          <button id="cal-prev" class="p-2 rounded-lg hover:bg-[var(--color-border)] transition-colors text-[var(--color-text-secondary)]" aria-label="Previous month">
+            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+          <h2 id="cal-title" class="text-base font-semibold"></h2>
+          <button id="cal-next" class="p-2 rounded-lg hover:bg-[var(--color-border)] transition-colors text-[var(--color-text-secondary)]" aria-label="Next month">
+            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        </div>
+        <!-- Calendar grid (rendered by JS) -->
+        <div id="cal-grid" class="p-3 sm:p-4"></div>
+        <!-- Active filter bar -->
+        <div id="cal-filter-bar" style="display:none;" class="px-4 pb-3 border-t border-[var(--color-border)]">
+          <div class="flex items-center justify-between pt-3 text-sm">
+            <span id="cal-filter-label" class="text-[var(--color-accent)] font-medium"></span>
+            <button id="cal-clear" class="text-[var(--color-text-secondary)] hover:text-[var(--color-text)] underline transition-colors">
+              Show all
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- No-match message -->
+      <p id="no-events-msg" style="display:none;" class="mt-4 text-sm text-[var(--color-text-secondary)]">
+        No events on this date.
+      </p>
+    </div>
+  )}
 
   {upcomingEvents.length === 0 && pastEvents.length === 0 ? (
     <p class="text-[var(--color-text-secondary)]">No events yet. Check back soon!</p>
   ) : (
     <>
       {upcomingEvents.length > 0 && (
-        <section>
+        <section id="section-upcoming">
           <h2 class="text-xl font-semibold mb-4 text-[var(--color-accent)]">Upcoming</h2>
           {Object.entries(groupedUpcoming).map(([month, events]) => (
-            <div class="mb-8">
+            <div class="mb-8" data-month-group>
               <h3 class="text-sm font-medium text-[var(--color-text-secondary)] uppercase tracking-wide mb-3">
                 {month}
               </h3>
               <div class="grid gap-4">
                 {events.map((event) => (
-                  <EventCard
-                    title={event.data.title}
-                    description={event.data.description}
-                    date={event.data.date}
-                    endDate={event.data.endDate}
-                    location={event.data.location}
-                    url={event.data.url}
-                    slug={event.id}
-                    photoCount={event.data.photos.length}
-                  />
+                  <div data-event-date={toDateStr(event.data.date)}>
+                    <EventCard
+                      title={event.data.title}
+                      description={event.data.description}
+                      date={event.data.date}
+                      endDate={event.data.endDate}
+                      location={event.data.location}
+                      url={event.data.url}
+                      slug={event.id}
+                      photoCount={event.data.photos.length}
+                    />
+                  </div>
                 ))}
               </div>
             </div>
@@ -57,20 +105,22 @@ const groupedUpcoming = upcomingEvents.reduce<Record<string, typeof upcomingEven
       )}
 
       {pastEvents.length > 0 && (
-        <section class="mt-12">
+        <section id="section-past" class="mt-12">
           <h2 class="text-xl font-semibold mb-4">Past Events Archive</h2>
           <div class="grid gap-4">
             {pastEvents.map((event) => (
-              <EventCard
-                title={event.data.title}
-                description={event.data.description}
-                date={event.data.date}
-                endDate={event.data.endDate}
-                location={event.data.location}
-                url={event.data.url}
-                slug={event.id}
-                photoCount={event.data.photos.length}
-              />
+              <div data-event-date={toDateStr(event.data.date)}>
+                <EventCard
+                  title={event.data.title}
+                  description={event.data.description}
+                  date={event.data.date}
+                  endDate={event.data.endDate}
+                  location={event.data.location}
+                  url={event.data.url}
+                  slug={event.id}
+                  photoCount={event.data.photos.length}
+                />
+              </div>
             ))}
           </div>
         </section>
@@ -78,3 +128,231 @@ const groupedUpcoming = upcomingEvents.reduce<Record<string, typeof upcomingEven
     </>
   )}
 </BaseLayout>
+
+<style is:global>
+  .cal-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    margin-bottom: 4px;
+  }
+  .cal-weekday {
+    text-align: center;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    padding: 4px 0;
+  }
+  .cal-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+  }
+  .cal-day {
+    position: relative;
+    text-align: center;
+    padding: 6px 2px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    min-height: 44px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+  }
+  .cal-day--has-events {
+    cursor: pointer;
+    font-weight: 600;
+  }
+  .cal-day--has-events:hover {
+    background-color: var(--color-accent-hover);
+    color: white;
+  }
+  .cal-day--has-events:hover .cal-dot {
+    background-color: white;
+  }
+  .cal-day--selected {
+    background-color: var(--color-accent) !important;
+    color: white !important;
+  }
+  .cal-day--selected .cal-dot {
+    background-color: white !important;
+  }
+  .cal-day--today:not(.cal-day--selected) {
+    box-shadow: 0 0 0 1px var(--color-accent);
+  }
+  .cal-dots {
+    display: flex;
+    justify-content: center;
+    gap: 2px;
+  }
+  .cal-dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background-color: var(--color-accent);
+    flex-shrink: 0;
+  }
+  @media (max-width: 380px) {
+    .cal-day {
+      min-height: 36px;
+      font-size: 0.75rem;
+      padding: 4px 1px;
+      border-radius: 6px;
+    }
+    .cal-dot {
+      width: 3px;
+      height: 3px;
+    }
+  }
+</style>
+
+<script define:vars={{ calendarEvents }}>
+  const DAYS = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
+  const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+  function toDateStr(d) {
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  }
+
+  const today = new Date();
+  const todayStr = toDateStr(today);
+
+  // Build date -> events lookup
+  const eventsByDate = {};
+  for (const ev of calendarEvents) {
+    if (!eventsByDate[ev.date]) eventsByDate[ev.date] = [];
+    eventsByDate[ev.date].push(ev);
+  }
+
+  // Start on the first upcoming event's month, or current month
+  const futureEvents = calendarEvents.filter(e => e.date >= todayStr).sort((a, b) => a.date.localeCompare(b.date));
+  let displayYear, displayMonth;
+  if (futureEvents.length > 0) {
+    const parts = futureEvents[0].date.split('-');
+    displayYear = parseInt(parts[0]);
+    displayMonth = parseInt(parts[1]) - 1;
+  } else {
+    displayYear = today.getFullYear();
+    displayMonth = today.getMonth();
+  }
+
+  let selectedDate = null;
+
+  const calGrid = document.getElementById('cal-grid');
+  const calTitle = document.getElementById('cal-title');
+  const filterBar = document.getElementById('cal-filter-bar');
+  const filterLabel = document.getElementById('cal-filter-label');
+  const noEventsMsg = document.getElementById('no-events-msg');
+
+  document.getElementById('cal-prev').addEventListener('click', () => {
+    if (--displayMonth < 0) { displayMonth = 11; displayYear--; }
+    renderCalendar();
+  });
+
+  document.getElementById('cal-next').addEventListener('click', () => {
+    if (++displayMonth > 11) { displayMonth = 0; displayYear++; }
+    renderCalendar();
+  });
+
+  document.getElementById('cal-clear').addEventListener('click', clearFilter);
+
+  function clearFilter() {
+    selectedDate = null;
+    document.querySelectorAll('[data-event-date]').forEach(el => { el.style.display = ''; });
+    document.querySelectorAll('[data-month-group]').forEach(el => { el.style.display = ''; });
+    const upcomingSection = document.getElementById('section-upcoming');
+    const pastSection = document.getElementById('section-past');
+    if (upcomingSection) upcomingSection.style.display = '';
+    if (pastSection) pastSection.style.display = '';
+    filterBar.style.display = 'none';
+    if (noEventsMsg) noEventsMsg.style.display = 'none';
+    renderCalendar();
+  }
+
+  function selectDate(dateStr) {
+    selectedDate = dateStr;
+
+    const [y, m, d] = dateStr.split('-').map(Number);
+    filterLabel.textContent = new Date(y, m - 1, d).toLocaleDateString('en-us', {
+      weekday: 'long', month: 'long', day: 'numeric', year: 'numeric',
+    });
+    filterBar.style.display = 'block';
+
+    let visibleCount = 0;
+    document.querySelectorAll('[data-event-date]').forEach(el => {
+      const matches = el.dataset.eventDate === dateStr;
+      el.style.display = matches ? '' : 'none';
+      if (matches) visibleCount++;
+    });
+
+    // Hide month groups in upcoming section that have no visible events
+    const upcomingSection = document.getElementById('section-upcoming');
+    if (upcomingSection) {
+      upcomingSection.querySelectorAll('[data-month-group]').forEach(group => {
+        const hasVisible = [...group.querySelectorAll('[data-event-date]')].some(el => el.style.display !== 'none');
+        group.style.display = hasVisible ? '' : 'none';
+      });
+      const hasVisible = [...upcomingSection.querySelectorAll('[data-event-date]')].some(el => el.style.display !== 'none');
+      upcomingSection.style.display = hasVisible ? '' : 'none';
+    }
+
+    const pastSection = document.getElementById('section-past');
+    if (pastSection) {
+      const hasVisible = [...pastSection.querySelectorAll('[data-event-date]')].some(el => el.style.display !== 'none');
+      pastSection.style.display = hasVisible ? '' : 'none';
+    }
+
+    if (noEventsMsg) noEventsMsg.style.display = visibleCount > 0 ? 'none' : 'block';
+
+    renderCalendar();
+  }
+
+  function renderCalendar() {
+    calTitle.textContent = `${MONTHS[displayMonth]} ${displayYear}`;
+
+    const firstDay = new Date(displayYear, displayMonth, 1).getDay();
+    const lastDate = new Date(displayYear, displayMonth + 1, 0).getDate();
+
+    let html = '<div class="cal-weekdays">';
+    for (const d of DAYS) html += `<div class="cal-weekday">${d}</div>`;
+    html += '</div><div class="cal-days">';
+
+    // Leading empty cells
+    for (let i = 0; i < firstDay; i++) html += '<div class="cal-day"></div>';
+
+    for (let d = 1; d <= lastDate; d++) {
+      const dateStr = `${displayYear}-${String(displayMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+      const hasEvents = !!eventsByDate[dateStr];
+      const isSelected = selectedDate === dateStr;
+      const isToday = dateStr === todayStr;
+
+      const cls = [
+        'cal-day',
+        hasEvents ? 'cal-day--has-events' : '',
+        isSelected ? 'cal-day--selected' : '',
+        isToday ? 'cal-day--today' : '',
+      ].filter(Boolean).join(' ');
+
+      const onClick = hasEvents ? `onclick="window.__calClick('${dateStr}')"` : '';
+
+      html += `<div class="${cls}" ${onClick}><span>${d}</span>`;
+      if (hasEvents) {
+        html += '<div class="cal-dots">';
+        const count = Math.min(eventsByDate[dateStr].length, 3);
+        for (let i = 0; i < count; i++) html += '<div class="cal-dot"></div>';
+        html += '</div>';
+      }
+      html += '</div>';
+    }
+
+    html += '</div>';
+    calGrid.innerHTML = html;
+  }
+
+  window.__calClick = function(dateStr) {
+    selectedDate === dateStr ? clearFilter() : selectDate(dateStr);
+  };
+
+  renderCalendar();
+</script>
