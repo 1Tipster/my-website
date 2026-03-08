@@ -1,5 +1,5 @@
 ---
-title: Sample Event
+title: A Sample Event
 description: This is a sample event.
 date: 2026-04-10T10:00:00.000Z
 endDate: 2026-04-10T16:00:00.000Z
