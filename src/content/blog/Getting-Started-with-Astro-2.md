@@ -1,5 +1,5 @@
 ---
-title: Getting Started with Astro 2
+title: Getting Started with Astro
 description: A quick overview of why I chose Astro for this website and how you can get started with it too.
 pubDate: 2025-01-20T00:00:00.000Z
 tags:
