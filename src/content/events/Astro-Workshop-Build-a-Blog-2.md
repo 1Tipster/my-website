@@ -1,5 +1,5 @@
 ---
-title: 'Astro Workshop: Build a Blog 2'
+title: 'Astro Workshop: Build a Blog'
 description: 'Hands-on workshop where we''ll build a blog from scratch using Astro, Tailwind CSS, and Decap CMS.'
 date: 2026-04-10T10:00:00.000Z
 endDate: 2026-04-10T16:00:00.000Z
